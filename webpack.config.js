@@ -42,7 +42,8 @@ var config = {
 
 	devServer: {
 		port: 7070,
-		contentBase: './dist'
+		contentBase: './dist',
+		historyApiFallback: true
 	}
 };
 module.exports = config;
