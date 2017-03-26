@@ -1,48 +1,61 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { reduxForm, Field } from 'redux-form';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { Link } from 'react-router';
 import { createPosts } from '../actions/index';
 
-const renderSelect = field => (
+const renderField = ({ input, label, type, meta: { touched, error, warning } }) => (
   <div>
-    <label>{field.input.label}</label>
-    <select {...field.input}/>
-    {field.touched && field.error && <div className="error">{field.error}</div>}
-  </div>
-);
-
-const renderField = field => (
+    <label>{label}</label>
     <div>
-      <label>{field.input.label}</label>
-      <input {...field.input} className={field.input.className}/>
-      {field.touched && field.error && <div className="error">{field.error}</div>}
+      <input {...input} placeholder={label} type={type}/>
+      {touched && ((error && <span>{error}</span>) || (warning && <span>{warning}</span>))}
     </div>
+  </div>
 );
 
 class PostsNew extends Component {
 
+	constructor(props) {
+		super(props);
+		this.onSubmit = this.onSubmit.bind(this);
+	}
+
+	static contextTypes = {
+		router: PropTypes.object
+	}
+
+	onSubmit(values, dispatch, props) {
+		console.log(values);
+		console.log(dispatch);
+		console.log(props);
+		this.props.createPosts(values)
+		.then(()=>{
+			this.context.router.push('/');
+		});
+	}
+
 	render() {
-		const { touched, error, handleSubmit, pristine, reset, submitting } = this.props;
-		console.log("touched "+touched);
-		console.log("error "+error);
-		console.log("props "+JSON.stringify(this.props));
+		const { handleSubmit, pristine, reset, submitting } = this.props;
 		return (
-			<form onSubmit={handleSubmit(createPosts)}>
+			<form onSubmit={handleSubmit(this.onSubmit)}>
 				<h3>Create A New Post</h3>
-				<div className="form-group" onSubmit={handleSubmit}>
-					<Field name="title" component="input" type="text" className="form-control" label="Title" />
+				<div className="form-group">
+					<Field name="title" component={renderField} type="text" 
+					className="form-control" label="Title" />
 				</div>
 				<div className="form-group">
-					<Field name="categories" component="input" type="text" className="form-control" label="Categories" />
+					<Field name="categories" component={renderField} type="text" 
+					className="form-control" label="Categories" />
 				</div>
 				<div className="form-group">
-					<Field name="content" component="input" type="textarea" className="form-control" label="Content" />
-				</div>
-				<div className="text-help">
-					{touched && error ? error:'No error'}
+					<Field name="content" component={renderField} type="textarea" 
+					className="form-control" label="Content" />
 				</div>
 				<button type="submit" disabled={submitting} className="btn btn-primary">Submit</button>
-				<button type="button" disabled={pristine || submitting} onClick={reset} className="btn btn-secondary">Clear Values</button>
+				<button type="button" disabled={pristine || submitting} 
+				onClick={reset} className="btn btn-secondary">Clear Values</button>
 				<Link to="/" className="btn btn-danger">Cancel</Link>
 			</form>
 		);
@@ -50,22 +63,26 @@ class PostsNew extends Component {
 }
 
 function validate(values) {
-	console.log('Validate called ');
-	const error = {};
+	const errors = {};
 	if(!values.title) {
-		error.title = 'Please enter the title';
+		errors.title = 'Please enter the title';
 	}
 	if(!values.categories) {
-		error.categories = 'Please enter the Categories';
+		errors.categories = 'Please enter the Categories';
 	}
 	if(!values.content) {
-		error.content = 'Please enter the Content';
+		errors.content = 'Please enter the Content';
 	}
-	console.log("error "+JSON.stringify(error));
-	return error;
+	return errors;
 }
 
-export default reduxForm({
+function mapDispatchToProps(dispatch) {
+	return bindActionCreators({ createPosts }, dispatch);
+}
+
+const form = reduxForm({
 	form: "PostsNew",
 	validate
-}, null, {createPosts})(PostsNew);
+});
+
+export default connect(null, mapDispatchToProps)(form(PostsNew));

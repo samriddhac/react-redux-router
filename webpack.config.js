@@ -19,10 +19,10 @@ var config = {
 	},
 
 	plugins: [
-		new webpack.optimize.UglifyJsPlugin({
+		/*new webpack.optimize.UglifyJsPlugin({
 			warnings:true
 		}),
-		new webpack.optimize.OccurrenceOrderPlugin(),
+		new webpack.optimize.OccurrenceOrderPlugin(),*/
 		new HtmlWebpackPlugin({
 			template: './src/index.html'
 		}),
