@@ -3,12 +3,12 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Link } from 'react-router';
 
-import { fetchPosts } from '../actions/index'; 
+//import { fetchPosts } from '../actions/index'; 
 
 class PostsIndex extends Component {
 
 	componentWillMount(){
-		this.props.fetchPosts();
+		//this.props.fetchPosts();
 	}
 
 	renderPosts() {
@@ -41,11 +41,11 @@ class PostsIndex extends Component {
 	}
 }
 
-{/*function mapDispatchToProps(dispatch) {
-	return bindActionCreators({ fetchPosts }, dispatch); 
-}
+//{function mapDispatchToProps(dispatch) {
+//	return bindActionCreators({ fetchPosts }, dispatch); 
+//}
 
-export default connect(null, mapDispatchToProps)(PostsIndex);*/}
+//export default connect(null, mapDispatchToProps)(PostsIndex);}
 
 function mapStateToProps(state) {
 	console.log('state '+JSON.stringify(state));
@@ -54,4 +54,5 @@ function mapStateToProps(state) {
 	}
 }
 
-export default connect(mapStateToProps, { fetchPosts })(PostsIndex);
+//export default connect(mapStateToProps, { fetchPosts })(PostsIndex);
+export default connect(mapStateToProps)(PostsIndex);

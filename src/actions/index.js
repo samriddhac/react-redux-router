@@ -10,6 +10,17 @@ const API_KEY ='?key=axfcgvgfcfgcg_samriddha_19-11_84';
 export function fetchPosts() {
 	let url = `${ROOT_URL}${API_KEY}`;
 	let request = axios.get(url);
+
+	//thunk return 
+	/*return (dispatch) => {
+		request.then((data) => {
+			dispatch({
+				type:FETCH_POSTS,
+				payload:data
+			});
+		});
+	}*/
+
 	return {
 		type:FETCH_POSTS,
 		payload: request
